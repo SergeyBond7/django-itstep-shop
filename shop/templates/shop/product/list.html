@@ -1,0 +1,41 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+{% block content %}
+    <div id="main" class="product-list">
+        <div class="three"><h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1></div>
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4">
+                    <div class="card-mb-4" style="width: 18rem; height: 10rem;">
+                        <div class="d-flex justify-content-between">
+                        <div class="product-grid">
+                        <div class="product-image">
+                            <a href="{{ product.get_absolute_url }}" class="image">
+                                <img class="card-img-top" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+                            </a>
+                            <a href="" class="add-to-cart">Добавить в корзину</a>
+                        </div>
+                            <div class="product-content">
+                                <h3 class="title">
+                                    <a href="{{ product.get_absolute_url }}">
+                                        {{ product.name }}
+                                    </a>
+                                </h3>
+                            <div class="price">{{ product.price }}₴</div>
+                        </div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+{% endfor %}
+</div>
+    </div>
+{% endblock %}
+
+
+
+
+

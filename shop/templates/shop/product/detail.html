@@ -1,0 +1,28 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    {% if category %}{{ category.title }}{% else %}Products{% endif %}
+{% endblock %}
+{% block content %}
+<main class="container">
+  <div class="left-column ml-5">
+    <img class="ml-5" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
+  </div>
+  <!-- Right Column -->
+  <div class="right-column">
+
+    <!-- Product Description -->
+    <div class="product-description">
+      <span>{{ product.category }}</span>
+      <h1>{{ product.name }}</h1>
+      <p>{{ product.description|linebreaks }}</p>
+    </div>
+
+    <!-- Product Pricing -->
+    <div class="product-price">
+      <span>{{product.price }} ₴</span>
+      <a href="#" class="cart-btn">Добавить в корзину</a>
+    </div>
+  </div>
+</main>
+{% endblock %}
