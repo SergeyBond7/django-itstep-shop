@@ -1,15 +1,20 @@
 {% extends 'shop/base.html' %}
 {% block content %}
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <fieldset class="mt-4">
-            <legend class="mb-3"></legend>
-            <form method="post" class="mt-4">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn btn-primary">Войти</button>
-            </form>
-        </fieldset>
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+    <div class="fadeIn first">
+      <h2 class="text text-center" id="greeting">С возвращением!</h2>
     </div>
+
+    <!-- Login Form -->
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" class="fadeIn fourth" value="Войти">
+    </form>
+
+  </div>
 </div>
 {% endblock %}

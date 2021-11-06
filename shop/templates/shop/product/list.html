@@ -6,7 +6,7 @@
 {% block content %}
     <div id="main" class="product-list">
         <div class="three"><h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1></div>
-        <div class="row">
+        <div class="row" id="catalog-list">
             {% for product in products %}
                 <div class="col-md-4">
                     <div class="card-mb-4" style="width: 18rem; height: 10rem;">
@@ -16,7 +16,7 @@
                             <a href="{{ product.get_absolute_url }}" class="image">
                                 <img class="card-img-top" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
                             </a>
-                            <a href="" class="add-to-cart">Добавить в корзину</a>
+                            <a href="{{ product.get_absolute_url }}" class="add-to-cart">Детальнее</a>
                         </div>
                             <div class="product-content">
                                 <h3 class="title">
@@ -34,8 +34,6 @@
 </div>
     </div>
 {% endblock %}
-
-
 
 
 

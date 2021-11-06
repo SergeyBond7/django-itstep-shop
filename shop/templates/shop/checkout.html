@@ -1,0 +1,78 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+<script src="https://unpkg.com/imask"></script>
+{% endblock %}
+{% block content %}
+<form method="post" id="checkout-form"> {% csrf_token %}
+<div  id="checkout-card">
+    <div class="card">
+        <div class="row">
+            <div class="col-md-8 cart">
+                <div class="title">
+                    <div class="row">
+                        <div class="col">
+                            <h4><b>Ваша корзина</b></h4>
+                        </div>
+                            <div class="col align-self-center text-right text-muted">
+                                {{ products_total_nmb }} шт.</div>
+                        </div>
+                    </div>
+                    {% for product_in_basket in products_in_basket %}
+                    <div class="row border-top border-bottom">
+                        <div class="row main align-items-center" id="product-row">
+                            <div class="col-2">
+                                <img class="img-fluid" src="{{ product_in_basket.product.image.url }}"></div>
+                            <div class="col">
+                                <div class="row text-muted">{{ product_in_basket.product.category }}</div>
+                                <div class="row">{{ product_in_basket.product.name }}</div>
+                            </div>
+                                <div class="quantity">
+                                  <input class="product-in-basket-nmb"
+                                         type="number" min="1" step="1" value="{{ product_in_basket.nmb }}"
+                                         name="product_in_basket_{{ product_in_basket.id }} ">
+                                    <span hidden class="product-price">{{ product_in_basket.price_per_item }}</span>
+                                </div>
+                            <div class="col ml-5">&#8372;
+                                <span class="total-product-in-basket-amount">{{ product_in_basket.total_price }}</span>
+                                <span class="close">&#10005;</span></div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="back-to-shop"><a href="javascript:history.back()">&leftarrow;
+                    <span class="text-muted">Вернуться</span></a></div>
+            </div>
+            <div class="col-md-4 summary">
+                <div>
+                    <h5><b>Сведения</b></h5>
+                </div>
+                <hr>
+                <div class="row" id="checkout-row">
+                    <span class="form-error">{{ form.name.errors }}</span>
+                </div>
+                <p>Имя и Фамилия <i class="bi bi-person"></i></p>
+                <input type="text" id="fullname" name="{{ form.name.html_name }}"
+                       placeholder="Введите имя и фамилию" value="{{ request.POST.name }}">
+                    <p style="margin-top: 10px;">
+                        Доставка <i class="bi bi-truck"></i>
+                    </p> <select name="{{ form.delivery.html_name }}">
+                        <option class="text-muted" value="1">Нова пошта - 75.00 &#8372;</option>
+                        <option class="text-muted" value="2">Укрпошта - 50.00 &#8372;</option>
+                    </select>
+                <span class="form-error">{{ form.phone.errors }}</span>
+                    <p>Номер телефона
+                        <i class="bi bi-telephone"></i>
+                    </p>
+                <input id="code" type="tel" name="{{ form.phone.html_name }}"
+                       placeholder="Введите номер телефона" value="{{ request.POST.name }}">
+                <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+                    <div class="col">Общая стоимость</div>
+                    <div class="col text-right">&#8372; <span id="total_order_amount">{{ request.session.basket.total_amount }}</span></div>
+                </div> <button class="btn" id="checkout-btn" onclick="popupMessage()">ОФОРМИТЬ</button>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}

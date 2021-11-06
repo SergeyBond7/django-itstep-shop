@@ -3,13 +3,16 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static '/img/favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css'%}" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet'>
     <link href="http://fonts.cdnfonts.com/css/days" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <title>Greeting</title>
+    <link rel="stylesheet" href="{% static 'css/checkout.css'%}" type="text/css">
+    {% block extrahead %}{% endblock %}
+    <title>Dadgets</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-dark">
@@ -53,27 +56,67 @@
             <a class="nav-item nav-link ml-3 effect-underline" href="#">
                 <span class="username">{{ request.user.username }}</span>
             </a>
+        <div class="basket-container">
+            <a class="nav-item nav-link ml-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi bi-bag-plus-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zM8.5 8a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V12a.5.5 0 0 0 1 0v-1.5H10a.5.5 0 0 0 0-1H8.5V8z"/>
+                </svg>
+                <span id="basket_total_amount"></span>
+                <span id="basket_total_nmb">
+                    {% if products_total_nmb %}
+                        ({{ products_total_nmb }})
+                    {% else %}
+                        (0)
+                    {% endif %}
+                </span>
+                <div class="basket-items hidden">
+                    <ul class="list-group list-group-flush">
+                        {% for product_in_basket in products_in_basket %}
+                            <li class="list-group-item list-group-numbered border-bottom"
+                                style="background-color: transparent; border: none;">
+                                {{ product_in_basket.product.name }}
+                                <button style="background-color: #ff0000;
+                                color: white; z-index: 99999 !important;" type="button"
+                                class="delete-item btn close" data-dismiss="modal"
+                                        aria-label="Close" data-product_id="{{ product_in_basket.id }}">
+                                <span aria-hidden="true"><i class="bi bi-x"></i></span></button>
+                            </li>
+                        <li class="divider"></li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button"
+                            onclick="window.location.href='/checkout'"
+                            style="float: right; margin-right: 5%;"
+                            class="btn btn-light">Оформление</button>
+                </div>
+            </a>
+        </div>
+
         {% endif %}
-      <a class="nav-item nav-link ml-3" href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi bi-bag-plus-fill" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zM8.5 8a.5.5 0 0 0-1 0v1.5H6a.5.5 0 0 0 0 1h1.5V12a.5.5 0 0 0 1 0v-1.5H10a.5.5 0 0 0 0-1H8.5V8z"/>
-        </svg>
-      </a>
     </ul>
   </div>
 </nav>
-<div class="sidebar-container">
-  <ul class="sidebar-navigation">
-    <li class="header">Категории</li>
-    {% for c in categories %}
-      <li {% if category.slug == c.slug %} class="selected"{% endif %}>
-          <a href="{{ c.get_absolute_url }}">
-            <i class="fa fa-home" aria-hidden="true">{{ c.name }}</i>
-            <li class="divider"></li>
-          </a>
-      </li>
-    {% endfor %}
-  </ul>
+{% if categories %}
+    <div class="sidebar-container" style="position:fixed;">
+            <ul class="sidebar-navigation">
+            <li class="header">Категории</li>
+            {% for c in categories %}
+              <li {% if category.slug == c.slug %} class="selected"{% endif %}>
+                  <a href="{{ c.get_absolute_url }}">
+                    <i class="fa fa-home" aria-hidden="true">{{ c.name }}</i>
+                  </a>
+              </li>
+            {% endfor %}
+    {% else %}
+    <div class="sidebar-container" style="height: 80px; position: fixed; width: 150px;
+                                          border-bottom-right-radius: 25px;">
+      <ul class="sidebar-navigation">
+        <li class="header">Навигация</li>
+          <li class="selected" style="">
+            <a href="{% url "app:product_list" %}">На главную</a>
+        </li>
+      </ul>
+    {% endif %}
 </div>
     {% block content %}
     {% endblock %}
@@ -84,6 +127,12 @@
   </div>
 
 </footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/index.js' %}"></script>
+
 </body>
 </html>

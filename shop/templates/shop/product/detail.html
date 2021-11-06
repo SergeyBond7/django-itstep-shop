@@ -1,28 +1,38 @@
-{% extends "shop/base.html" %}
-{% load static %}
-{% block title %}
-    {% if category %}{{ category.title }}{% else %}Products{% endif %}
-{% endblock %}
-{% block content %}
-<main class="container">
-  <div class="left-column ml-5">
-    <img class="ml-5" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
-  </div>
-  <!-- Right Column -->
-  <div class="right-column">
-
-    <!-- Product Description -->
-    <div class="product-description">
-      <span>{{ product.category }}</span>
-      <h1>{{ product.name }}</h1>
-      <p>{{ product.description|linebreaks }}</p>
+  {% extends "shop/base.html" %}
+  {% load static %}
+  {% block title %}
+      {% if category %}{{ category.title }}{% else %}Products{% endif %}
+  {% endblock %}
+  {% block content %}
+  <main class="container">
+    <div class="left-column ml-5">
+      <img class="ml-5" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}">
     </div>
+    <!-- Right Column -->
+    <div class="right-column">
 
-    <!-- Product Pricing -->
-    <div class="product-price">
-      <span>{{product.price }} ₴</span>
-      <a href="#" class="cart-btn">Добавить в корзину</a>
+      <!-- Product Description -->
+      <div class="product-description">
+        <span>{{ product.category }}</span>
+        <h1>{{ product.name }}</h1>
+        <p>{{ product.description|linebreaks }}</p>
+      </div>
+
+      <!-- Product Pricing -->
+      <div class="product-price">
+        <span>Цена: {{product.price }} ₴</span>
+        </div>
+        <div class="product-cart">
+          <form id="form-buying-product" class="form-inline" action="{%  url 'app:basket_adding' %}">
+            {% csrf_token %}
+            <input type="number" class="form-control" id="number" style="width: 35%; background-color: #ede4e4;">
+          <button type="submit" id="submit_btn" class="cart-btn ml-2"
+            data-product_id = "{{ product.id }}"
+            data-name = "{{ product.name }}"
+            data-price="{{ product.price }}"
+            data-img = "{{ product.img }}">В корзину</button>
+          </form>
+          </div>
     </div>
-  </div>
-</main>
-{% endblock %}
+  </main>
+  {% endblock %}

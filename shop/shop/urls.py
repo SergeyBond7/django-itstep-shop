@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include(('app.urls', 'app'), namespace='app')),
-    url('auth/', include('app.urls'))
+    url('auth/', include('app.urls')),
 ]
 app_name = 'app'
 
