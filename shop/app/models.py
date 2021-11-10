@@ -1,11 +1,13 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from PIL import Image
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=200, db_index=True)
-    slug = models.SlugField(max_length=200, db_index=True, unique=True)
+    name = models.CharField(max_length=200, db_index=True, null=True)
+    slug = models.SlugField(max_length=200, db_index=True, unique=True, null=True)
+
 
     class Meta:
         ordering = ('name',)
@@ -21,10 +23,12 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200, db_index=True, null=True, default=None)
     slug = models.SlugField(max_length=200, db_index=True)
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
+    image2 = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
+    image3 = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     stock = models.PositiveIntegerField()
@@ -45,12 +49,14 @@ class Product(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    first_name = models.CharField(max_length=64, default='', verbose_name='Имя')
-    last_name = models.CharField(max_length=64, default='', verbose_name='Фамилия')
-    phone = models.CharField(blank=True, max_length=64, default='', verbose_name='Телефон')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Пользователь', primary_key=True)
+    city = models.CharField(max_length=64, default='', verbose_name='Город',null=True)
+    phone = models.CharField(blank=True, max_length=64, default='', verbose_name='Телефон',null=True)
     avatar = models.ImageField(blank=True, upload_to='profile_avatars/%Y/%m/%d', verbose_name='Аватар',
                                default='profile_avatars/default.jpg')
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name}"
 
     class Meta:
         verbose_name = 'Профиль'
@@ -147,6 +153,32 @@ class ProductInBasket(models.Model):
         self.total_price = int(self.nmb) * price_per_item
 
         super(ProductInBasket, self).save(*args, **kwargs)
+
+
+class CharactName(models.Model):
+
+    category = models.ForeignKey(Category, related_name='characts', on_delete=models.CASCADE, default=None,null=True)
+    name1 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+    name2 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+    name3 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+    name4 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+    name5 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+    product_id = models.ForeignKey(Product, related_name='characts_name', null=True, on_delete=models.CASCADE)
+
+
+class CharactDesc(models.Model):
+    charact_id = models.ForeignKey(CharactName, related_name='characts_desc', on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Product, related_name='characts_desc',null=True, on_delete=models.CASCADE)
+    desc1 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+    desc2 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+    desc3 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+    desc4 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+    desc5 = models.CharField(max_length=200, db_index=True, null=True, default=None)
+
+    def __str__(self):
+        return str(self.charact_id)
+
+
 
 
 
