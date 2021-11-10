@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django import forms
+from .models import Profile
 
 
 class UserRegisterForm(UserCreationForm):
@@ -49,3 +50,31 @@ class CheckoutContactForm(forms.Form):
     name = forms.CharField(required=True)
     phone = forms.CharField(required=True)
     delivery = forms.ChoiceField(required=True, choices=CHOICE_GENDER)
+
+
+class UpdateUserForm(forms.ModelForm):
+    username = forms.CharField(max_length=100,
+                               required=True,
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(required=True,
+                             widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+
+class ProfileForm(forms.ModelForm):
+    first_name = forms.CharField(label="First name", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(label="Last name", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    city = forms.CharField(label="City", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    phone = forms.CharField(label="Phone", widget=forms.TextInput(attrs={'class': 'form-control'}))
+    avatar = forms.ImageField(label="Avatar", required=False, error_messages={'required': ' '},
+                              widget=forms.TextInput(attrs={
+                                  'class': 'form-control',
+                                    'type': 'file'}))
+
+    class Meta:
+        model = Profile
+        fields = ['first_name', 'last_name', 'city', 'phone', 'avatar']
+

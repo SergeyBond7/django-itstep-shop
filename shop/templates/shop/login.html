@@ -1,5 +1,12 @@
 {% extends 'shop/base.html' %}
 {% block content %}
+{% if messages %}
+<div class="messages mt-2">
+	{% for message in messages %}
+	<p class="message {{ message.tags }}">{{ message }}</p>
+	{% endfor %}
+</div>
+{% endif %}
 <div class="wrapper fadeInDown">
   <div id="formContent">
     <!-- Tabs Titles -->
