@@ -1,10 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<nav aria-label="Paginator" class="paginator">
+  <ul class="pagination pg-blue justify-content-center">
+    {% if products.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Назад</a></li>
+    {% endif %}
+    {% for p in  products.paginator.page_range %}
+      {% if p == products.number %}
+        <li class="page-item active"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+      {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if products.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Вперёд</a></li>
+    {% endif %}
+  </ul>
+</nav>

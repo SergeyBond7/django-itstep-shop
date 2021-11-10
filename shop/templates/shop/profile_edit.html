@@ -1,0 +1,43 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+{% block content %}
+{% if messages %}
+<div class="messages mt-2">
+	{% for message in messages %}
+	<p class="message {{ message.tags }}">{{ message }}</p>
+	{% endfor %}
+</div>
+{% endif %}
+<form method="post" enctype="multipart/form-data" action="">
+    {% csrf_token %}
+<div class="wrapper bg-white mt-sm-5">
+    <h4 class="pb-4 border-bottom">Здравствуйте, {{first_name}} {{last_name}}!</h4>
+    <div class="d-flex align-items-start py-3 border-bottom">
+            <img src="/media/profile_avatars/default.png" class="img" alt="">
+        <div class="pl-sm-4 pl-2">
+            <span class="profile-info">
+            <p>Ваш email:</p><b>{{ email }}</b></span>
+        </div>
+    </div>
+    <div class="py-2">
+        <div class="row py-2">
+        </div>
+        <div class="row py-2">
+            <div class="col-md-6 pt-md-0 pt-3"> <label>Номер телефона</label>
+                <input type="tel" class="bg-light form-control"
+                       value="{{ form.phone.value|default_if_none:'' }}"
+                       name="{{ form.phone.name }}"></div>
+            <div class="col-md-6 pt-md-0 pt-3"> <label>Город</label>
+                <input type="text" class="bg-light form-control"
+                       value="{{ form.city.value|default_if_none:'' }}"
+                       name="{{ form.city.name }}"></div>
+        </div>
+        <div class="py-3 pb-4 border-bottom text-center"><button class="btn btn-primary">Сохранить</button> </div>
+    </div>
+</div>
+</form>
+{% endblock %}
+

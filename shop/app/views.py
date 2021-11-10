@@ -1,13 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Product
-from django.contrib.auth import login as user_login, logout
+from django.contrib.auth import authenticate, login as user_login, logout
 from django.template import RequestContext
 from .forms import *
 from .models import *
 from django.http import JsonResponse
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.models import User
-
+from django.contrib import messages
 
 
 def index(request):
@@ -18,15 +17,26 @@ def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
     products = Product.objects.filter(available=True)
+    page = request.GET.get('page')
+
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
 
+    paginator = Paginator(products, 9)
+
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
 
     return render(request,
                   'shop/product/list.html',
                   {'category': category,
                    'categories': categories,
+                   'page': page,
                    'products': products})
 
 
@@ -62,6 +72,7 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
+            messages.success(request, 'Вы успешно зарегестрировались!')
             user = form.save()
             Profile.objects.create(user=user)
             return redirect('/login')
@@ -87,6 +98,7 @@ def product(request, product_id):
     print(request.session.session_key)
 
     return render(request, 'detail.html', locals())
+
 
 
 def basket_adding(request):
@@ -170,3 +182,39 @@ def checkout(request):
         else:
             print("no")
     return render(request, 'shop/checkout.html', locals())
+
+
+def profile_edit(request):
+    if request.method == 'GET':
+        try:
+            current_profile = Profile.objects.get(pk=request.user.id)
+        except (AttributeError, Profile.DoesNotExist):
+            current_profile = None
+        if not request.user.is_authenticated:
+            return redirect('/auth/login')
+        current_profile.first_name = request.user.first_name
+        current_profile.last_name = request.user.last_name
+        current_profile.user.email = request.user.email
+        profile_form = ProfileForm(instance=current_profile)
+    else:
+        current_profile = Profile.objects.get(pk=request.user.id)
+        current_profile.phone = request.POST.get('phone')
+        current_profile.city = request.POST.get('city')
+        current_profile.avatar = request.FILES.get('avatar')
+        current_profile.save()
+        profile_form = ProfileForm(request.POST, request.FILES)
+        if profile_form.is_valid():
+            profile_form.save()
+        messages.success(request, "Вы успешно изменили ваш профиль!")
+        if profile_form:
+            return redirect('/profile_edit')
+
+    return render(request, 'shop/profile_edit.html', {
+        'form': profile_form,
+        'first_name': current_profile.first_name,
+        'last_name': current_profile.last_name,
+        'email': current_profile.user.email
+    })
+
+
+
