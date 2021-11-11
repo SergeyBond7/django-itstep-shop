@@ -78,3 +78,4 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['first_name', 'last_name', 'city', 'phone', 'avatar']
 
+

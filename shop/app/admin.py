@@ -65,12 +65,10 @@ admin.site.register(ProductInBasket, ProductInBasketAdmin)
 
 
 class CharactNameAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in CharactName._meta.fields][:-1]
+    list_display = [field.name for field in CharactName._meta.fields]
 
     class Meta:
         model = CharactName
-
-    exclude = ('product_id',)
 
 
 admin.site.register(CharactName, CharactNameAdmin)
@@ -84,6 +82,7 @@ class CharactDescAdmin(admin.ModelAdmin):
 
 
 admin.site.register(CharactDesc, CharactDescAdmin)
+
 
 class ProfileAdmin (admin.ModelAdmin):
     list_display = [field.name for field in Profile._meta.fields]

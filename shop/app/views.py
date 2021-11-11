@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login as user_login, logout
-from django.template import RequestContext
+from django.contrib.postgres.search import SearchVector
 from .forms import *
 from .models import *
 from django.http import JsonResponse
@@ -16,7 +16,13 @@ def index(request):
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
-    products = Product.objects.filter(available=True)
+    search_query = request.GET.get('search', '')
+
+    if search_query:
+        products = Product.objects.filter(name__icontains=search_query)
+        print(products)
+    else:
+        products = Product.objects.filter(available=True)
     page = request.GET.get('page')
 
     if category_slug:

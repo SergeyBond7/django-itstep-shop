@@ -17,6 +17,10 @@ div.content {
 float:right;
 }
 
+#right {
+    margin-left: 50px;
+}
+
 .column {
   display: flex;
   justify-content: space-between;
@@ -27,8 +31,7 @@ float:right;
 
 #catalog-list {
   display: flex;
-  height: 1000px;
-  justify-content: space-between;
+  height: 1300px;
   margin-left: 200px;
   padding: 1px 16px;
 }
@@ -129,6 +132,10 @@ i.fa {
     height: 250px;
     }
 
+.card-mb-4 {
+    margin-top: 10%;
+}
+
 #sidebar a.active {
   background-color: #f7bb07;
   color: white;
@@ -151,9 +158,6 @@ width: 70%;
 margin-left: 20px;
 }
 
-#right {
-    margin-left: 18rem !important;
-}
 
 div.dropdown-menu {
     background-color: #343A40 !important;
@@ -278,7 +282,7 @@ div.dropdown-menu {
 
 img.card-img-top {
     width: 200px;
-    height: 250px;
+   height: 300px;
 }
 
 footer {
@@ -768,8 +772,8 @@ input[type=text]:placeholder {
 
 /* Slideshow container */
 .slideshow-container {
-  max-width: 500px;
-  max-height: 600px;
+  max-width: 400px;
+  max-height: 500px;
   position: relative;
   margin: auto;
 }
@@ -807,14 +811,14 @@ input[type=text]:placeholder {
 }
 
 
-.slideshow-container {
-    width: 400px;
-    height: 500px;
+.slideshow-container  {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .slideshow-container img {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 600px;
+    max-height: 450px;
     display: block;
     margin: 0 auto;
 }
@@ -977,5 +981,26 @@ dd {
 
 .message.error {
 	background-color: red;
+}
+
+.input-group-text {
+    color: white;
+    border: none;
+    background-color: transparent;
+}
+
+.bi-search {
+    color: white;
+
+}
+#search-button: {
+    background-color: transparent;
+}
+
+#search-button:active {
+    border-style: outset;
+    background-color: none;
+    border: none;
+    outline: none;
 }
 

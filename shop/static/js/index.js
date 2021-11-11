@@ -4,6 +4,9 @@ $(function(){$(".dropdown-toggle").dropdown('toggle');})
 
 $('.message').delay(1000).fadeIn(1500).delay(2000).fadeOut(1000);
 
+
+/* Basket */
+
 $(document.all).ready(function() {
     var form = $('#form-buying-product');
     console.log(form);

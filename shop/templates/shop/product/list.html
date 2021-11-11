@@ -5,7 +5,10 @@
 {% endblock %}
 {% block content %}
     <div id="main" class="product-list">
-        <div class="three"><h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1></div>
+        <div class="three"><h1>{% if category %}{{ category.name }}{% else %}Вся техника
+            <i class="bi bi-laptop fa-7x" style="font-size:40px;"></i>
+            {% endif %}
+        </h1></div>
         <div class="row" id="catalog-list">
             {% for product in products %}
                 <div class="col-md-4">
